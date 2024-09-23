@@ -1,2 +1,14 @@
-# 2411COMP102403_CacHeCoSoDuLieu
-Kho lưu trữ môn Các hệ cơ sở dữ liệu - HCMUE (thầy Khiết).
+## Thông tin
+Năm học: **2024 - 2025**.  
+Mã lớp học phần: **2411COMP102403**.  
+Tên học phần: **Các hệ cơ sở dữ liệu**.  
+Giảng viên: **ThS. Lương Trần Ngọc Khiết**.  
+
+**Hình thức học**:
+  - 100% trực tiếp tại lớp.
+
+**Phân bố điểm**:
+
+## Lưu trữ
+- **My notes**:  
+- **Các bài Lab**:  
