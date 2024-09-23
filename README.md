@@ -8,7 +8,7 @@ Giảng viên: **ThS. Lương Trần Ngọc Khiết**.
   - 100% trực tiếp tại lớp.
 
 **Phân bố điểm**:
-  - Thi giữa kỳ thực hành script, chiếm 50% số điểm.
+  - Thi giữa kỳ thực hành, chiếm 50% số điểm.
   - Thi cuối kỳ tự luận, chiếm 50%.
 
 ## Lưu trữ
