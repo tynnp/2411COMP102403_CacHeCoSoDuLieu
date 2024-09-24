@@ -5,7 +5,6 @@ GO
 CREATE DATABASE QLBongDa
 GO
 
-
 -- Tao bang
 USE QLBongDa
 GO
