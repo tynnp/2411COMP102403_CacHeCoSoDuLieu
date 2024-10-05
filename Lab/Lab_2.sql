@@ -492,7 +492,20 @@ GO
 EXECUTE VTCAONHAT 3, 2009
 
 -- Cau 45  ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
 
+CREATE PROCEDURE THONGTINTRANDAU (@Mact NVARCHAR(50)) AS 
+BEGIN 
+    -- Trong data không có tên trận đấu, tạm thay bằng kết quả
+    SELECT MATRAN, NGAYTD, KETQUA FROM TRANDAU 
+    JOIN THAMGIA ON TRANDAU.MATRAN = THAMGIA.MATD 
+    JOIN CAUTHU ON THAMGIA.MACT = CAUTHU.MACT
+    WHERE CAUTHU.MACT = @Mact 
+END 
+
+GO
+EXECUTE THONGTINTRANDAU 16
 
 -- Cau 46 ------------------------------------------------------------------------------------------------------------------------
 
