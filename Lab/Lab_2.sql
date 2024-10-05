@@ -408,7 +408,20 @@ GO
 EXECUTE CLB_QG N'SHB Đà Nẵng', N'Bra-xin'
 
 -- Cau 44.28 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
 
+CREATE PROCEDURE TDVONGNAM(@vong int, @nam int) AS
+BEGIN 
+    SELECT MATRAN, NGAYTD, SANVD.TENSAN, CAULACBO1.TENCLB AS TENCLB1, CAULACBO2.TENCLB AS TENCLB2, KETQUA FROM TRANDAU
+    JOIN SANVD ON TRANDAU.MASAN = SANVD.MASAN
+    JOIN CAULACBO AS CAULACBO1 ON TRANDAU.MACLB1 = CAULACBO1.MACLB
+    JOIN CAULACBO AS CAULACBO2 ON TRANDAU.MACLB2 = CAULACBO2.MACLB
+    WHERE VONG = @vong AND NAM = @nam 
+END 
+
+GO 
+EXECUTE TDVONGNAM 3, 2009
 
 -- Cau 44.29 ------------------------------------------------------------------------------------------------------------------------
 
