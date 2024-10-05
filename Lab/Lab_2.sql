@@ -457,7 +457,20 @@ GO
 EXECUTE QUOCTINHKHAC 'VN'
 
 -- Cau 44.31 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
 
+CREATE PROCEDURE TIMVITRI (@vitri NVARCHAR(50)) AS 
+BEGIN 
+    SELECT TINH.TENTINH, COUNT(CAUTHU.MACT) AS SOLUONG FROM CAULACBO
+    JOIN TINH ON CAULACBO.MATINH = TINH.MATINH
+    JOIN CAUTHU ON CAUTHU.MACLB = CAULACBO.MACLB
+    WHERE CAUTHU.VITRI = @vitri 
+    GROUP BY TINH.TENTINH 
+END 
+
+GO 
+EXECUTE TIMVITRI N'Tiền Đạo'
 
 -- Cau 44.32 ------------------------------------------------------------------------------------------------------------------------
 
