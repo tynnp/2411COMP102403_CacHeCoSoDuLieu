@@ -12,5 +12,6 @@ Giảng viên: **ThS. Lương Trần Ngọc Khiết**.
   - Thi cuối kỳ tự luận, chiếm 50%.
 
 ## Lưu trữ
-- **My notes**: Thư mục [My notes](/My_notes)  
+- **Tài liệu**: Tài liệu [Tai_lieu](/Tai_lieu/)
+- **Ghi chú**: Thư mục [Ghi_chu](/Ghi_chu/)  
 - **Các bài Lab**: Thư mục [Lab](/Lab)  
