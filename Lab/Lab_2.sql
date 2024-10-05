@@ -378,7 +378,7 @@ EXECUTE CHUACOSDT
 USE QLBongDa
 GO
 
-CREATE PROCEDURE SOTRANHOA(@vong int, @nam int) AS 
+CREATE PROCEDURE SOTRANHOA (@vong int, @nam int) AS 
 BEGIN 
     DECLARE @cnt int 
     SELECT @cnt = COUNT(*) FROM TRANDAU
@@ -396,7 +396,7 @@ EXECUTE SOTRANHOA 3, 2009
 USE QLBongDa 
 GO 
 
-CREATE PROCEDURE CLB_QG(@Tenclb NVARCHAR(50), @Tenqg NVARCHAR(50)) AS 
+CREATE PROCEDURE CLB_QG (@Tenclb NVARCHAR(50), @Tenqg NVARCHAR(50)) AS 
 BEGIN 
     SELECT MACT, HOTEN, NGAYSINH, DIACHI, VITRI FROM CAUTHU 
     JOIN QUOCGIA ON CAUTHU.MAQG = QUOCGIA.MAQG
@@ -411,7 +411,7 @@ EXECUTE CLB_QG N'SHB Đà Nẵng', N'Bra-xin'
 USE QLBongDa
 GO
 
-CREATE PROCEDURE TDVONGNAM(@vong int, @nam int) AS
+CREATE PROCEDURE TDVONGNAM (@vong int, @nam int) AS
 BEGIN 
     SELECT MATRAN, NGAYTD, SANVD.TENSAN, CAULACBO1.TENCLB AS TENCLB1, CAULACBO2.TENCLB AS TENCLB2, KETQUA FROM TRANDAU
     JOIN SANVD ON TRANDAU.MASAN = SANVD.MASAN
@@ -424,10 +424,26 @@ GO
 EXECUTE TDVONGNAM 3, 2009
 
 -- Cau 44.29 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
 
+CREATE PROCEDURE HLVVN (@Tenqg NVARCHAR(50)) AS
+BEGIN   
+    SELECT HUANLUYENVIEN.MAHLV, TENHLV, DIACHI, HLV_CLB.VAITRO, CAULACBO.TENCLB FROM HUANLUYENVIEN
+    JOIN HLV_CLB ON HUANLUYENVIEN.MAHLV = HLV_CLB.MAHLV
+    JOIN CAULACBO ON HLV_CLB.MACLB = CAULACBO.MACLB
+    JOIN QUOCGIA ON HUANLUYENVIEN.MAQG = QUOCGIA.MAQG 
+    WHERE QUOCGIA.TENQG = @Tenqg
+END     
+
+GO 
+EXECUTE HLVVN N'Việt Nam'
 
 -- Cau 44.30 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
 
+CREATE PROCEDURE CTNN ()
 
 -- Cau 44.31 ------------------------------------------------------------------------------------------------------------------------
 
