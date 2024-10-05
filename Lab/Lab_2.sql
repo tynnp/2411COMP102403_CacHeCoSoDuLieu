@@ -473,7 +473,23 @@ GO
 EXECUTE TIMVITRI N'Tiền Đạo'
 
 -- Cau 44.32 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
 
+CREATE PROCEDURE VTCAONHAT (@vong int, @nam int) AS 
+BEGIN 
+    SELECT CAULACBO.TENCLB, TINH.TENTINH FROM BANGXH
+    JOIN CAULACBO ON BANGXH.MACLB = CAULACBO.MACLB 
+    JOIN TINH ON CAULACBO.MATINH = TINH.MATINH 
+
+    WHERE BANGXH.NAM = @nam AND BANGXH.VONG = @vong AND BANGXH.HANG = (
+        SELECT MIN(HANG) FROM BANGXH
+        WHERE NAM = @nam AND VONG = @vong
+    )
+END 
+
+GO 
+EXECUTE VTCAONHAT 3, 2009
 
 -- Cau 45  ------------------------------------------------------------------------------------------------------------------------
 
