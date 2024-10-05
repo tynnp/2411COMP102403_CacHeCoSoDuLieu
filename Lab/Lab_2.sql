@@ -260,27 +260,139 @@ GO
 EXECUTE SOTRANHOA
 
 -- Cau 43.27 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
 
+CREATE PROCEDURE SHB_BRAXIN AS 
+BEGIN 
+    SELECT MACT, HOTEN, NGAYSINH, DIACHI, VITRI FROM CAUTHU
+    JOIN QUOCGIA ON CAUTHU.MAQG = QUOCGIA.MAQG
+    JOIN CAULACBO ON CAUTHU.MACLB = CAULACBO.MACLB
+    WHERE CAULACBO.TENCLB = N'SHB Đà Nẵng' AND QUOCGIA.TENQG = N'Bra-xin'
+    RETURN
+END 
+
+GO
+EXECUTE SHB_BRAXIN
 
 -- Cau 43.28 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
 
+CREATE PROCEDURE NAM2009_VONG3 AS
+BEGIN 
+    SELECT MATRAN, NGAYTD, SANVD.TENSAN, CAULACBO1.TENCLB AS TENCLB1, CAULACBO2.TENCLB AS TENCLB2, KETQUA FROM TRANDAU
+    JOIN SANVD ON TRANDAU.MASAN = SANVD.MASAN
+    JOIN CAULACBO AS CAULACBO1 ON TRANDAU.MACLB1 = CAULACBO1.MACLB
+    JOIN CAULACBO AS CAULACBO2 ON TRANDAU.MACLB2 = CAULACBO2.MACLB
+    WHERE NAM = 2009 AND VONG = 3
+    RETURN 
+END 
+
+GO
+EXECUTE NAM2009_VONG3
 
 -- Cau 43.29 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
 
+CREATE PROCEDURE HLVVN AS 
+BEGIN 
+    SELECT HUANLUYENVIEN.MAHLV, TENHLV, NGAYSINH, DIACHI, HLV_CLB.VAITRO, CAULACBO.TENCLB FROM HUANLUYENVIEN
+    JOIN HLV_CLB ON HUANLUYENVIEN.MAHLV = HLV_CLB.MAHLV
+    JOIN CAULACBO ON HLV_CLB.MACLB = CAULACBO.MACLB
+    JOIN QUOCGIA ON HUANLUYENVIEN.MAQG = QUOCGIA.MAQG
+    WHERE QUOCGIA.TENQG = N'Việt Nam'
+END 
+
+GO
+EXECUTE HLVVN
 
 -- Cau 43.30 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
 
+CREATE PROCEDURE CTNN AS
+BEGIN 
+    SELECT CAULACBO.MACLB, CAULACBO.TENCLB, SANVD.TENSAN, SANVD.DIACHI, COUNT(CAUTHU.MACT) AS CTNUOCNGOAI FROM CAULACBO
+    JOIN SANVD ON CAULACBO.MASAN = SANVD.MASAN
+    JOIN CAUTHU ON CAULACBO.MACLB = CAUTHU.MACLB
+    WHERE CAUTHU.MAQG <> 'VN'
+    GROUP BY CAULACBO.MACLB, CAULACBO.TENCLB, SANVD.TENSAN, SANVD.DIACHI
+    HAVING COUNT(CAUTHU.MACT) > 2
+END
+
+GO
+EXECUTE CTNN 
 
 -- Cau 43.31 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
 
+CREATE PROCEDURE TIENDAO AS
+BEGIN 
+    SELECT TINH.TENTINH, COUNT(CAUTHU.MACT) AS SOLUONG FROM CAULACBO 
+    JOIN TINH ON CAULACBO.MATINH = TINH.MATINH
+    JOIN CAUTHU ON CAULACBO.MACLB = CAUTHU.MACLB
+    WHERE CAUTHU.VITRI = N'Tiền Đạo' 
+    GROUP BY TINH.TENTINH 
+END 
+
+GO 
+EXECUTE TIENDAO
 
 -- Cau 43.32 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
 
+CREATE PROCEDURE VTCAONHATVONG3NAM2009 AS
+BEGIN 
+    SELECT CAULACBO.TENCLB, TINH.TENTINH FROM BANGXH
+    JOIN CAULACBO ON BANGXH.MACLB = CAULACBO.MACLB
+    JOIN TINH ON CAULACBO.MATINH = TINH.MATINH
+
+    WHERE BANGXH.NAM = 2009 AND BANGXH.VONG = 3 AND BANGXH.HANG = (
+        SELECT MIN(HANG) FROM BANGXH
+        WHERE NAM = 2009 AND VONG = 3
+    )
+END 
+
+GO 
+EXECUTE VTCAONHATVONG3NAM2009
 
 -- Cau 43.33 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+CREATE PROCEDURE CHUACOSDT AS
+BEGIN 
+    SELECT HUANLUYENVIEN.TENHLV FROM HUANLUYENVIEN
+    JOIN HLV_CLB ON HUANLUYENVIEN.MAHLV = HLV_CLB.MAHLV
+    WHERE HUANLUYENVIEN.DIENTHOAI IS NULL
+END 
+
+GO 
+EXECUTE CHUACOSDT
+
+-- Cau 44.42 ------------------------------------------------------------------------------------------------------------------------
 
 
--- Cau 44 ------------------------------------------------------------------------------------------------------------------------
+-- Cau 44.27 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 44.28 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 44.29 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 44.30 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 44.31 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 44.32 ------------------------------------------------------------------------------------------------------------------------
 
 
 -- Cau 45  ------------------------------------------------------------------------------------------------------------------------
