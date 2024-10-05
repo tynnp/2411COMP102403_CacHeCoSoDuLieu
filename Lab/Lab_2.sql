@@ -1,4 +1,146 @@
--- Cau 35
+-- Cau 23 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
+
+CREATE RULE R_VITRI AS
+@Vitri IN (N'Thủ Môn', N'Tiền Đạo', N'Tiền Vệ', N'Trung Vệ', N'Hậu Vệ')
+
+GO 
+SP_BINDRULE 'R_VITRI', 'CAUTHU.VITRI'
+
+-- Cau 24 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
+
+CREATE RULE R_VAITRO AS
+@Vaitro IN (N'HLV Chính', N'HLV Phụ', N'HLV Thể Lực', N'HLV Thủ Môn')
+
+GO
+SP_BINDRULE 'R_VAITRO', 'HLV_CLB.VAITRO'
+
+-- Cau 25 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+CREATE RULE R_TUOICT AS
+YEAR(GETDATE()) - YEAR(@Tuoi) >= 18
+
+GO 
+SP_BINDRULE 'R_TUOICT', 'CAUTHU.NGAYSINH'
+
+-- Cau 26 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+CREATE RULE R_SOTRAI AS
+@Sotrai > 0
+
+GO
+SP_BINDRULE 'R_SOTRAI', 'THAMGIA.SOTRAI'
+
+-- Cau 27 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+CREATE VIEW V_SHB_BRAXIN AS 
+SELECT MACT, HOTEN, NGAYSINH, DIACHI, VITRI FROM CAUTHU
+JOIN QUOCGIA ON CAUTHU.MAQG = QUOCGIA.MAQG
+JOIN CAULACBO ON CAUTHU.MACLB = CAULACBO.MACLB
+WHERE CAULACBO.TENCLB = N'SHB Đà Nẵng' AND QUOCGIA.TENQG = N'Bra-xin'
+
+GO
+SELECT * FROM V_SHB_BRAXIN
+
+-- Cau 28 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+CREATE VIEW V_NAM2009_VONG3 AS
+SELECT MATRAN, NGAYTD, SANVD.TENSAN, CAULACBO1.TENCLB AS TENCLB1, CAULACBO2.TENCLB AS TENCLB2, KETQUA FROM TRANDAU
+JOIN SANVD ON TRANDAU.MASAN = SANVD.MASAN
+JOIN CAULACBO AS CAULACBO1 ON TRANDAU.MACLB1 = CAULACBO1.MACLB
+JOIN CAULACBO AS CAULACBO2 ON TRANDAU.MACLB2 = CAULACBO2.MACLB
+WHERE NAM = 2009 AND VONG = 3
+
+GO 
+SELECT * FROM V_NAM2009_VONG3
+
+-- Cau 29 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+CREATE VIEW V_HLVVN AS
+SELECT HUANLUYENVIEN.MAHLV, TENHLV, NGAYSINH, DIACHI, HLV_CLB.VAITRO, CAULACBO.TENCLB FROM HUANLUYENVIEN
+JOIN HLV_CLB ON HUANLUYENVIEN.MAHLV = HLV_CLB.MAHLV
+JOIN CAULACBO ON HLV_CLB.MACLB = CAULACBO.MACLB
+JOIN QUOCGIA ON HUANLUYENVIEN.MAQG = QUOCGIA.MAQG
+WHERE QUOCGIA.TENQG = N'Việt Nam'
+
+GO
+SELECT * FROM V_HLVVN
+
+-- Cau 30 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
+
+CREATE VIEW V_CTNN AS
+SELECT CAULACBO.MACLB, CAULACBO.TENCLB, SANVD.TENSAN, SANVD.DIACHI, COUNT(CAUTHU.MACT) AS CTNUOCNGOAI FROM CAULACBO
+JOIN SANVD ON CAULACBO.MASAN = SANVD.MASAN
+JOIN CAUTHU ON CAULACBO.MACLB = CAUTHU.MACLB
+WHERE CAUTHU.MAQG <> 'VN'
+GROUP BY CAULACBO.MACLB, CAULACBO.TENCLB, SANVD.TENSAN, SANVD.DIACHI
+HAVING COUNT(CAUTHU.MACT) > 2
+
+GO
+SELECT * FROM V_CTNN
+
+-- Cau 31 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
+
+CREATE VIEW V_TIENDAO AS 
+SELECT TINH.TENTINH, COUNT(CAUTHU.MACT) AS SOLUONG FROM CAULACBO 
+JOIN TINH ON CAULACBO.MATINH = TINH.MATINH
+JOIN CAUTHU ON CAULACBO.MACLB = CAUTHU.MACLB
+WHERE CAUTHU.VITRI = N'Tiền Đạo' 
+GROUP BY TINH.TENTINH 
+
+GO 
+SELECT * FROM V_TIENDAO
+
+-- Cau 32 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
+
+CREATE VIEW V_VTCAONHATVONG3NAM2009 AS
+SELECT CAULACBO.TENCLB, TINH.TENTINH FROM BANGXH
+JOIN CAULACBO ON BANGXH.MACLB = CAULACBO.MACLB
+JOIN TINH ON CAULACBO.MATINH = TINH.MATINH
+
+WHERE BANGXH.NAM = 2009 AND BANGXH.VONG = 3 AND BANGXH.HANG = (
+	SELECT MIN(HANG) FROM BANGXH
+	WHERE NAM = 2009 AND VONG = 3
+)
+
+GO
+SELECT * FROM V_VTCAONHATVONG3NAM2009
+
+-- Cau 33 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+CREATE VIEW V_CHUACOSDT AS 
+SELECT HUANLUYENVIEN.TENHLV FROM HUANLUYENVIEN
+JOIN HLV_CLB ON HUANLUYENVIEN.MAHLV = HLV_CLB.MAHLV
+WHERE HUANLUYENVIEN.DIENTHOAI IS NULL
+
+GO 
+SELECT * FROM V_CHUACOSDT
+
+-- Cau 34 ------------------------------------------------------------------------------------------------------------------------
+-- NO QUERY
+
+-- Cau 35 ------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE XINCHAO(@Ten NVARCHAR(MAX)) AS
 BEGIN 
     PRINT N'Xin chào ' + @Ten
@@ -7,7 +149,7 @@ END
 GO 
 XINCHAO N'Nguyễn Ngọc Phú Tỷ'
 
--- Cau 36
+-- Cau 36 ------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE TONG(@s1 int, @s2 int) AS
 BEGIN 
     DECLARE @tg int 
@@ -18,7 +160,7 @@ END
 GO 
 TONG 2, 3
 
--- Cau 37
+-- Cau 37 ------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE TONG(@s1 int, @s2 int, @tong int output) AS
 BEGIN
     SET @tong = @s1 + @s2
@@ -31,7 +173,7 @@ SET @tong = 0
 EXECUTE TONG 2, 3, @tong out
 SELECT @tong AS TONG2SO
 
--- Cau 38
+-- Cau 38 ------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE SOLONNHAT(@s1 int, @s2 int) AS
 BEGIN 
     DECLARE @max int 
@@ -47,7 +189,7 @@ END
 GO 
 SOLONNHAT 2, 3
 
--- Cau 39
+-- Cau 39 ------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE MINVAMAX(@s1 int, @s2 int, @max int output, @min int output) AS 
 BEGIN 
     IF @s1 > @s2 SELECT @max = @s1, @min = @s2
@@ -61,7 +203,7 @@ SELECT @max = 0, @min = 0s
 EXECUTE MINVAMAX 2, 3, @max out, @min out 
 SELECT @max AS SOLON, @min AS SONHO
 
--- Cau 40
+-- Cau 40 ------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE TU_1_DEN_N (@n int) AS
 BEGIN 
     DECLARE @i int, @out VARCHAR(MAX)
@@ -79,7 +221,7 @@ END
 GO 
 EXECUTE TU_1_DEN_N 5
 
--- Cau 41
+-- Cau 41 ------------------------------------------------------------------------------------------------------------------------
 CREATE PROCEDURE TONG_VA_SLSOCHAN(@n int) AS 
 BEGIN 
     DECLARE @cnt int, @sum int, @i int 
@@ -99,7 +241,7 @@ END
 GO 
 EXECUTE TONG_VA_SLSOCHAN 10
 
--- Cau 42
+-- Cau 42 ------------------------------------------------------------------------------------------------------------------------
 USE QLBongDa
 GO
 
@@ -117,22 +259,40 @@ END
 GO 
 EXECUTE SOTRANHOA
 
--- Cau 43
+-- Cau 43.27 ------------------------------------------------------------------------------------------------------------------------
 
 
--- Cau 44
+-- Cau 43.28 ------------------------------------------------------------------------------------------------------------------------
 
 
--- Cau 45 
+-- Cau 43.29 ------------------------------------------------------------------------------------------------------------------------
 
 
--- Cau 46
+-- Cau 43.30 ------------------------------------------------------------------------------------------------------------------------
 
 
--- Cau 47
+-- Cau 43.31 ------------------------------------------------------------------------------------------------------------------------
 
 
--- Cau 48
+-- Cau 43.32 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 43.33 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 44 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 45  ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 46 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 47 ------------------------------------------------------------------------------------------------------------------------
+
+
+-- Cau 48 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_VTCAUTHU ON CAUTHU FOR INSERT AS
 BEGIN 
     DECLARE @Vitri NVARCHAR(20)
@@ -146,7 +306,7 @@ BEGIN
     END
 END
 
--- Cau 49
+-- Cau 49 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_SOAO ON CAUTHU FOR INSERT AS
 BEGIN
     DECLARE @So int, @Maclb VARCHAR(5)
@@ -160,13 +320,13 @@ BEGIN
         END
 END 
 
--- Cau 50
+-- Cau 50 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_THEMMOI ON CAUTHU FOR INSERT AS
 BEGIN 
     PRINT N'Đã thêm cầu thủ mới!'
 END
 
--- Cau 51
+-- Cau 51 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_CAUTHUNG ON CAUTHU FOR INSERT AS
 BEGIN 
     DECLARE @Maclb VARCHAR(5), @Maqg VARCHAR(5)
@@ -180,7 +340,7 @@ BEGIN
         END
 END
 
--- CAU 52
+-- CAU 52 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_THEMQG ON QUOCGIA FOR INSERT AS
 BEGIN 
     DECLARE @Tenqg NVARCHAR(60)
@@ -195,7 +355,7 @@ BEGIN
 END 
 
 
--- Cau 53
+-- Cau 53 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_THEMTINH ON TINH FOR INSERT AS
 BEGIN 
     DECLARE @Tentinh NVARCHAR(100)
@@ -209,7 +369,7 @@ BEGIN
         END 
 END 
 
--- Cau 54
+-- Cau 54 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_THAYDOIKQ ON TRANDAU FOR UPDATE AS
 BEGIN 
     IF UPDATE(KETQUA)
@@ -220,7 +380,7 @@ BEGIN
         END 
 END
 
--- Cau 55.a
+-- Cau 55.a ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_VAITROHLV ON HLV_CLB FOR INSERT AS
 BEGIN 
     DECLARE @Vaitro NVARCHAR(100) 
@@ -234,7 +394,7 @@ BEGIN
         END 
 END 
 
--- Cau 55.b
+-- Cau 55.b ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_SLHLVCHINH ON HLV_CLB FOR INSERT AS
 BEGIN
     DECLARE @Vaitro NVARCHAR(100), @Maclb VARCHAR(5)
@@ -248,7 +408,7 @@ BEGIN
         END
 END
 
--- Cau 56.a
+-- Cau 56.a ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_THEMCLB ON CAULACBO FOR INSERT AS
 BEGIN 
     DECLARE @Tenclb NVARCHAR(100)
@@ -260,7 +420,7 @@ BEGIN
         END
 END
 
--- Cau 56.b
+-- Cau 56.b ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_THEMCLB ON CAULACBO FOR INSERT AS
 BEGIN 
     DECLARE @Tenclb NVARCHAR(100)
@@ -274,7 +434,7 @@ BEGIN
         END
 END
 
--- Cau 57.a
+-- Cau 57.a ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_SUACAUTHU ON CAUTHU AFTER UPDATE AS
 BEGIN 
     IF UPDATE(HOTEN)
@@ -283,7 +443,7 @@ BEGIN
         END
 END 
 
--- Cau 57.b
+-- Cau 57.b ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_SUACAUTHU ON CAUTHU AFTER UPDATE AS
 BEGIN 
     IF UPDATE(HOTEN)
@@ -292,7 +452,7 @@ BEGIN
         END
 END 
 
--- Cau 57.c
+-- Cau 57.c ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_SUACAUTHU ON CAUTHU AFTER UPDATE AS
 BEGIN 
     IF UPDATE(HOTEN)
@@ -302,7 +462,7 @@ BEGIN
         END
 END 
 
--- Cau 57.d
+-- Cau 57.d ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_SUACAUTHU ON CAUTHU AFTER UPDATE AS
 BEGIN 
     IF UPDATE(HOTEN)
@@ -312,7 +472,7 @@ BEGIN
         END
 END 
 
--- Cau 57.e
+-- Cau 57.e ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_SUACAUTHU ON CAUTHU AFTER UPDATE AS
 BEGIN 
     IF UPDATE(HOTEN)
