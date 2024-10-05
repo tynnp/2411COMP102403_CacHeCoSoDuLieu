@@ -508,10 +508,33 @@ GO
 EXECUTE THONGTINTRANDAU 16
 
 -- Cau 46 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa 
+GO 
 
+CREATE PROCEDURE DANHSACHGHIBAN (@Matd NVARCHAR(50)) AS 
+BEGIN 
+    SELECT * FROM CAUTHU 
+    JOIN THAMGIA ON CAUTHU.MACT = THAMGIA.MACT 
+    JOIN TRANDAU ON THAMGIA.MATD = TRANDAU.MATRAN 
+    WHERE THAMGIA.MATD = @Matd AND THAMGIA.SOTRAI > 0
+END 
+
+GO 
+EXECUTE DANHSACHGHIBAN 2
 
 -- Cau 47 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa 
+GO 
+ 
+CREATE PROCEDURE CACTRANHOA (@nam int) AS
+BEGIN 
+    SELECT * FROM TRANDAU 
+    WHERE LEFT(KETQUA, CHARINDEX('-', KETQUA) - 1) = RIGHT(KETQUA, LEN(KETQUA) - CHARINDEX('-', KETQUA))
+    AND NAM = @nam
+END 
 
+GO 
+EXECUTE CACTRANHOA 2009
 
 -- Cau 48 ------------------------------------------------------------------------------------------------------------------------
 CREATE TRIGGER TG_VTCAUTHU ON CAUTHU FOR INSERT AS
