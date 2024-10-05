@@ -393,7 +393,19 @@ GO
 EXECUTE SOTRANHOA 3, 2009
 
 -- Cau 44.27 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa 
+GO 
 
+CREATE PROCEDURE CLB_QG(@Tenclb NVARCHAR(50), @Tenqg NVARCHAR(50)) AS 
+BEGIN 
+    SELECT MACT, HOTEN, NGAYSINH, DIACHI, VITRI FROM CAUTHU 
+    JOIN QUOCGIA ON CAUTHU.MAQG = QUOCGIA.MAQG
+    JOIN CAULACBO ON CAUTHU.MACLB = CAULACBO.MACLB
+    WHERE CAULACBO.TENCLB = @Tenclb AND QUOCGIA.TENQG = @Tenqg
+END 
+
+GO 
+EXECUTE CLB_QG N'SHB Đà Nẵng', N'Bra-xin'
 
 -- Cau 44.28 ------------------------------------------------------------------------------------------------------------------------
 
