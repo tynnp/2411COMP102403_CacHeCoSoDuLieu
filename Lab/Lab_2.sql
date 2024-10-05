@@ -375,7 +375,22 @@ GO
 EXECUTE CHUACOSDT
 
 -- Cau 44.42 ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO
 
+CREATE PROCEDURE SOTRANHOA(@vong int, @nam int) AS 
+BEGIN 
+    DECLARE @cnt int 
+    SELECT @cnt = COUNT(*) FROM TRANDAU
+
+    WHERE VONG = @vong AND NAM = @nam 
+    AND LEFT(KETQUA, CHARINDEX('-', KETQUA) - 1) = RIGHT(KETQUA, LEN(KETQUA) -CHARINDEX('-', KETQUA))
+
+    PRINT N'Số trận hòa ở vòng ' + CAST(@vong AS VARCHAR) + N' năm ' + CAST(@nam AS VARCHAR) + N' là ' + CAST(@cnt AS VARCHAR)
+END 
+
+GO
+EXECUTE SOTRANHOA 3, 2009
 
 -- Cau 44.27 ------------------------------------------------------------------------------------------------------------------------
 
