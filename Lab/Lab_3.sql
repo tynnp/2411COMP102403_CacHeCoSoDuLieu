@@ -44,3 +44,36 @@ END
 
 CLOSE POINT_CLB
 DEALLOCATE POINT_CLB
+
+-- Cau 60  ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa 
+GO 
+
+DECLARE POINT_DOIBONG CURSOR FOR 
+SELECT CAULACBO.TENCLB, SLNN FROM CAULACBO LEFT JOIN (
+    SELECT MACLB, COUNT(MACT) AS SLNN FROM CAUTHU 
+    JOIN QUOCGIA ON CAUTHU.MAQG = QUOCGIA.MAQG
+    WHERE QUOCGIA.MAQG <> 'VN'
+    GROUP BY CAUTHU.MACLB
+) CAUTHUNN ON CAULACBO.MACLB = CAUTHUNN.MACLB
+ORDER BY CAULACBO.TENCLB
+
+OPEN POINT_DOIBONG
+DECLARE @Tenclb NVARCHAR(100), @Slnn int 
+FETCH NEXT FROM POINT_DOIBONG INTO @Tenclb, @Slnn 
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    PRINT N'Tên câu lạc bộ ' + @Tenclb
+
+    IF (@Slnn != 0)
+        PRINT N'Số cầu thủ nước ngoài: ' + CAST(@Slnn AS VARCHAR)
+    ELSE 
+        PRINT N'Không có cầu thủ nước ngoài!'
+    PRINT ''
+    
+    FETCH NEXT FROM POINT_DOIBONG INTO @Tenclb, @Slnn
+END 
+
+CLOSE POINT_DOIBONG
+DEALLOCATE POINT_DOIBONG
