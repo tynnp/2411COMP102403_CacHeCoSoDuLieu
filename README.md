@@ -13,5 +13,4 @@ Giảng viên: **ThS. Lương Trần Ngọc Khiết**.
 
 ## Lưu trữ
 - **Tài liệu**: Tài liệu [Tai_lieu](/Tai_lieu/)
-- **Ghi chú**: Thư mục [Ghi_chu](/Ghi_chu/)  
 - **Các bài Lab**: Thư mục [Lab](/Lab)  
