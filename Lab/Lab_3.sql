@@ -79,3 +79,38 @@ CLOSE POINT_DOIBONG
 DEALLOCATE POINT_DOIBONG
 
 -- Cau 61  ------------------------------------------------------------------------------------------------------------------------
+USE QLBongDa
+GO 
+
+DECLARE POINT_DOIBONG CURSOR FOR
+SELECT CAULACBO.TENCLB, SLNB FROM CAULACBO LEFT JOIN (
+    SELECT HLV_CLB.MACLB, COUNT(HLV_CLB.MAHLV) SLNB FROM HUANLUYENVIEN 
+    JOIN HLV_CLB ON HUANLUYENVIEN.MAHLV = HLV_CLB.MAHLV
+    WHERE MAQG IN (
+        SELECT MAQG FROM QUOCGIA 
+        WHERE MAQG <> 'VN'
+    )
+    GROUP BY HLV_CLB.MACLB
+) CT ON CAULACBO.MACLB = CT.MACLB
+GROUP BY TENCLB, SLNB
+
+OPEN POINT_DOIBONG
+DECLARE @clb NVARCHAR(50), @hlvnn int 
+
+FETCH NEXT FROM POINT_DOIBONG INTO @clb, @hlvnn
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    PRINT N'Tên đội: ' + @clb 
+    IF (@hlvnn != 0)
+        BEGIN 
+            PRINT N'Số huấn luyện viên nước ngoài: ' + CAST(@hlvnn AS VARCHAR(50))
+        END 
+    ELSE
+        BEGIN
+            PRINT N'Không có'
+        END
+    FETCH NEXT FROM POINT_DOIBONG INTO @clb, @hlvnn
+END
+
+CLOSE POINT_DOIBONG
+DEALLOCATE POINT_DOIBONG
